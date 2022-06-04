@@ -17,6 +17,7 @@ export default {
 
 <style lang="stylus">
 @import './styles/variables.styl'
+@import './styles/transitions.styl'
 
 #app
   font-family Avenir, Helvetica, Arial, sans-serif
@@ -40,5 +41,16 @@ body, html
 
 .mb-2
   margin-bottom: 2rem
+.pt-1
+  padding-top: 1rem
+
+.text-small
+  font-size: 0.8rem
+
+.text-left
+  text-align: left
+
+.text-right
+  text-align: right
 
 </style>

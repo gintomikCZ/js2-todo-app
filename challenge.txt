@@ -4,4 +4,4 @@ v komponentě PersonFormPage
 3) v created hooku načíst záznam z db, pokud jsme tedy v edit módu
 4) vytvořit si datovou proměnnou - object person se všemi vlastnostmi  a navázat jednotlivé vlastnosti na inputy
 5) nezapomenout inputům dát id a labelům atribut for
-6) chování formuláře po submitu - uložení buň nového nebo existujícího záznamu a přesměrování buď na seznam nebo na detail
+6) chování formuláře po submitu - uložení buď nového nebo existujícího záznamu a přesměrování buď na seznam nebo na detail

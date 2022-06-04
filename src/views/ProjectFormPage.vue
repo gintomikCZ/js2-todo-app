@@ -3,56 +3,25 @@
   <h1>{{ title }}</h1>
 
   <form @submit="onSubmit">
-      <div class="form-control">
-        <label for="project">project name</label>
-        <!-- <input
-          type="text"
-          @input="onInput"
-          :value="project.project"
-        > -->
-        <input
-          autocomplete="off"
-          id="project"
-          type="text"
-          v-model="project.project"
-        >
-      </div>
-      <div class="form-control">
-        <label for="description">description</label>
-        <textarea
-          autocomplete="off"
-          id="description"
-          rows="4"
-          v-model="project.description"
-        ></textarea>
-      </div>
-      <div class="form-control">
-        <label for="start">start date</label>
-        <input
-          autocomplete="off"
-          id="start"
-          type="date"
-          v-model="project.start"
-        >
-      </div>
-      <div class="form-control">
-        <label for="ends">finish date</label>
-        <input
-          autocomplete="off"
-          id="ends"
-          type="date"
-          v-model="project.ends"
-        >
-      </div>
-      <t-button label="submit" />
+    <t-control
+      v-for="klic in controlsKeys"
+      :key="klic"
+      :label="controls[klic].label"
+      :control="klic"
+      :type="controls[klic].type"
+      :value="project[klic]"
+      @has-input="onHasInput"
+    />
+    <t-button label="submit" />
   </form>
-      
+
 </template>
 
 <script>
 
 import db from '../utils/db.js'
 import TButton from '../components/TButton.vue'
+import TControl from '../components/TControl.vue'
 
 export default {
   name: 'ProjectFormPage',
@@ -63,6 +32,24 @@ export default {
         description: '',
         start: '',
         ends: ''
+      },
+      controls: {
+        project: {
+          type: 'text',
+          label: 'project name'
+        },
+        description: {
+          type: 'text',
+          label: 'description'
+        },
+        start: {
+          type: 'date',
+          label: 'start date'
+        },
+        ends: {
+          type: 'date',
+          label: 'finish date'
+        }
       }
     }
   },
@@ -76,6 +63,9 @@ export default {
   computed: {
     title () {
       return this.$route.params.id ? 'edit project' : 'add project'
+    },
+    controlsKeys () {
+      return Object.keys(this.controls)
     }
   },
   methods: {
@@ -89,9 +79,12 @@ export default {
       return db.put('projects', this.project).then(() => {
         this.$router.push('/projects/' + this.$route.params.id)
       })
+    },
+    onHasInput (payload) { // { control: 'název kontrolky', value: 'hodnota'}
+      this.project[payload.control] = payload.value
     }
   },
-  components: { TButton }
+  components: { TButton, TControl }
 }
 
 </script>
@@ -101,17 +94,6 @@ export default {
 form
   width: 80%
   max-width: 500px
-  margin: 0 auto
-
-.form-control
-  display: flex
-  flex-direction: column
-  text-align: left
-  margin-bottom: 2rem
-
-.form-control input
-  font-size: 1.2rem
-  padding: .35em .75em
-
+  margin: 0 auto 3rem auto
 
 </style>
