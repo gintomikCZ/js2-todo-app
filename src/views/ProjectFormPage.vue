@@ -11,6 +11,7 @@
       :type="controls[klic].type"
       :value="project[klic]"
       @has-input="onHasInput"
+      :resizable="controls[klic].resizable"
     />
     <t-button label="submit" />
   </form>
@@ -39,8 +40,9 @@ export default {
           label: 'project name'
         },
         description: {
-          type: 'text',
-          label: 'description'
+          type: 'textarea',
+          label: 'description',
+          resizable: true
         },
         start: {
           type: 'date',
@@ -88,12 +90,3 @@ export default {
 }
 
 </script>
-
-<style lang="stylus" scoped>
-
-form
-  width: 80%
-  max-width: 500px
-  margin: 0 auto 3rem auto
-
-</style>

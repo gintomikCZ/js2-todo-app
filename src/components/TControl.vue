@@ -1,13 +1,21 @@
 <template>
   <div class="form-control">
     <label :for="control">{{ label }}</label>
-    <input
-      autocomplete="off"
-      :id="control"
-      :type="type"
+
+    <textarea v-if="type === 'textarea'" autocomplete="off" :id="control" :value="value" @input="onInput"
+      rows="4" :class="{'resize-none': !resizable }">
+    </textarea>
+
+    <select
+      v-else-if="type === 'select'"
+      autocomplete="off" :id="control"
       :value="value"
-      @input="onInput"
-    >
+      @input="onInput">
+      <option v-for="option in options" :key="control + option" :value="option">{{ option }}</option>
+    </select>
+
+    <input v-else autocomplete="off" :id="control" :type="type" :value="value" @input="onInput">
+
   </div>
 </template>
 
@@ -29,6 +37,14 @@
       },
       label: {
         type: String
+      },
+      resizable: {
+        type: Boolean,
+        default: false
+      },
+      options: {
+        type: Array,
+        default: () => []
       }
     },
     methods: {
@@ -48,8 +64,13 @@
   text-align: left
   margin-bottom: 2rem
 
+.form-control input, .form-control select, .form-control textarea
+  padding: .35em .75em
+
 .form-control input
   font-size: 1.2rem
-  padding: .35em .75em
+
+.resize-none
+  resize: none
 
 </style>

@@ -41,8 +41,14 @@ body, html
 
 .mb-2
   margin-bottom: 2rem
+.mr-1
+  margin-right: 1rem
 .pt-1
   padding-top: 1rem
+.pr-1
+  padding-right: 1rem
+.p-1
+  padding: 1rem
 
 .text-small
   font-size: 0.8rem
@@ -52,5 +58,13 @@ body, html
 
 .text-right
   text-align: right
+
+form
+  width: 80%
+  max-width: 500px
+  margin: 0 auto 3rem auto
+
+.cursor-pointer
+  cursor: pointer
 
 </style>

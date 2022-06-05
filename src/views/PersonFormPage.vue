@@ -106,12 +106,3 @@
     components: { TButton, TControl }
   }
 </script>
-
-<style lang="stylus" scoped>
-
-form
-  width: 80%
-  max-width: 500px
-  margin: 0 auto 3rem auto
-  
-</style>

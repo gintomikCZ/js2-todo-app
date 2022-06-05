@@ -1,0 +1,18 @@
+JS Object Date
+
+new Date() => vytvoří aktuální časové razítko
+
+new Date('2022-01-22') => vytvoří datum 22. ledna 2022
+
+new Date(2022, 0, 22, 10, 18, 55, 0) => vytvoří časové razítko 22.ledna 2022, 10:18:55 hod
+
+const dt = new Date('22-03-04')
+const dt2 = new Date()
+
+if (dt > dt2) - tohle přeci nejde, bylo by to porovnávání dvou objektů
+
+dt.getTime() => vrátí počet milisekund od 1.1.1970 0:00:00 do toho okamžiku dt
+
+když chci porovnat datumy, tak porovnám to, co mi vrátí metoda getTime()
+
+if (dt.getTime() > dt2.getTime())

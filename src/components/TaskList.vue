@@ -4,6 +4,7 @@
     <task-list-item
       v-for="task in tasks"
       :key="task.id"
+      :taskid="task.id"
       :task="task.task"
       :description="task.description"
       :taskdate="task.taskdate"
@@ -31,6 +32,9 @@ export default {
       showDescription: false
     }
   },
+  created () {
+    console.log(this.tasks)
+  },
   components: { TaskListItem }
 }
 
@@ -48,8 +52,7 @@ export default {
   width: 80%
   max-width: 450px
   & li
-    padding: 1rem
     &:not(:last-child)
-      border-bottom: 1px solid $border-light
+      border-bottom: 1px solid $border
 
 </style>
