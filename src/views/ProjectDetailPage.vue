@@ -1,34 +1,35 @@
 <template>
 
   <h1>Project Detail</h1>
-
   <t-loading v-if="loading" />
 
   <template v-else>
 
     <t-button label="edit" @clicked="onEditClicked" class="mr-1" />
-    <t-button label="add task" @clicked="onAddTaskClicked"/>
+    <t-button label="add task" @clicked="onAddTaskClicked" :class="{ 'mr-1': !tasks.length }" />
+    <t-button v-if="!tasks.length" label="delete project" @clicked="onDeleteProjectClicked" />
 
     <ul class="detail-list">
       <li>
         <div>project name: </div>
-        <div class="text-bold">{{ project.project }}</div>
+        <div class="text-bold text-right">{{ project.project }}</div>
       </li>
       <li>
         <div>description: </div>
-        <div class="text-bold">{{ project.description || '-' }}</div>
+        <div class="text-bold text-right">{{ project.description || '-' }}</div>
       </li>
       <li>
         <div>start date: </div>
-        <div class="text-bold">{{ project.start }}</div>
+        <div class="text-bold text-right">{{ project.start }}</div>
       </li>
       <li>
         <div>finish date: </div>
-        <div class="text-bold">{{ project.ends }}</div>
+        <div class="text-bold text-right">{{ project.ends }}</div>
       </li>
     </ul>
 
-    <task-list :tasks="tasks" />
+    <task-list v-if="tasks.length" :tasks="tasks" />
+    <p v-else>This project contains no tasks.</p>
 
   </template>
 </template>
@@ -79,6 +80,11 @@ export default {
     },
     onAddTaskClicked () {
       this.$router.push('/taskform/' + this.$route.params.id)
+    },
+    onDeleteProjectClicked () {
+      return db.delete('projects', { id: this.$route.params.id }).then(() => {
+        this.$router.push('/projects')
+      })
     }
   },
   components: { TLoading, TButton, TaskList }
@@ -87,14 +93,5 @@ export default {
 </script>
 
 <style lang="stylus">
-  .detail-list
-    list-style-type: none
-    margin: 2rem auto
-    padding: 0
-    width: 350px
-    & li
-      display: flex
-      justify-content: space-between
-      padding: .5rem
 
 </style>

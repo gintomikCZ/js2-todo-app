@@ -2,7 +2,7 @@
   <ul class="task-list">
 
     <task-list-item
-      v-for="task in tasks"
+      v-for="task in tasksSorted"
       :key="task.id"
       :taskid="task.id"
       :task="task.task"
@@ -18,6 +18,9 @@
 
 <script>
 
+// { task: 'nazev', priority: 'high, low, standard', status: 'done, started', taskdate: '2022-01-15' }
+// aSrtingString = 'AA2022-02-01'
+
 import TaskListItem from './TaskListItem.vue'
 export default {
   name: 'TaskList',
@@ -27,13 +30,26 @@ export default {
       default: () => []
     }
   },
-  data () {
-    return {
-      showDescription: false
+  computed: {
+    tasksSorted () {
+      return this.tasks.slice().sort((a, b) => {
+        let aSortingString = a.status === 'started' ? 'A' : 'B'
+        let bSortingString = b.status === 'started' ? 'A' : 'B'
+        if (a.priority === 'high') {
+          aSortingString += 'A'
+        } else {
+          aSortingString += a.priority === 'standard' ? 'B' : 'C'
+        }
+        if (b.priority === 'high') {
+          bSortingString += 'A'
+        } else {
+          bSortingString += b.priority === 'standard' ? 'B' : 'C'
+        }
+        aSortingString += a.taskdate
+        bSortingString += b.taskdate
+        return aSortingString.localeCompare(bSortingString)
+      })
     }
-  },
-  created () {
-    console.log(this.tasks)
   },
   components: { TaskListItem }
 }

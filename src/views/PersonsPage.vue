@@ -41,12 +41,12 @@ export default {
         description += person.skills ? person.skills : ''
         return {
           id: person.id,
-          title: person.first + ' ' + person.last,
+          title: person.last + ' ' + person.first,
           description,
           rightTop: person.email,
           rightBottom: person.phone || ''
         }
-      })
+      }).sort((a, b) => { return a.title.localeCompare(b.title) })
     }
   },
   created () {

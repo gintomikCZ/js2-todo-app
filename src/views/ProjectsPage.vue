@@ -34,14 +34,17 @@ export default {
   },
   computed: {
     projectsToDisplay () {
-      return this.projects.map(project => {
-        return {
-          id: project.id,
-          title: project.project,
-          description: project.description || '',
-          rightTop: formatDate(project.start),
-          rightBottom: formatDate(project.ends)
-        }
+      return this.projects
+        .slice()
+        .sort((a, b) => { return a.ends.localeCompare(b.ends) })
+        .map(project => {
+          return {
+            id: project.id,
+            title: project.project,
+            description: project.description || '',
+            rightTop: formatDate(project.start),
+            rightBottom: formatDate(project.ends),
+          }
       })
     }
   },

@@ -25,6 +25,7 @@ export default {
   -moz-osx-font-smoothing grayscale
   text-align center
   color $text
+  padding-bottom: 2rem
 
 body, html
   margin: 0
@@ -43,6 +44,8 @@ body, html
   margin-bottom: 2rem
 .mr-1
   margin-right: 1rem
+.mt-1
+  margin-top: 1rem
 .pt-1
   padding-top: 1rem
 .pr-1
@@ -66,5 +69,15 @@ form
 
 .cursor-pointer
   cursor: pointer
+
+.detail-list
+  list-style-type: none
+  margin: 2rem auto
+  padding: 0
+  width: 350px
+  & li
+    display: flex
+    justify-content: space-between
+    padding: .5rem
 
 </style>

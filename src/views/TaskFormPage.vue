@@ -82,7 +82,6 @@
           })
           .then(() => {
             db.get('projects/' + this.task.projectid).then(projectRecord => {
-              console.log(projectRecord)
               this.project = projectRecord
               this.loading = false
             })

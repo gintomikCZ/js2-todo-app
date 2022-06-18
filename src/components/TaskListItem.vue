@@ -5,8 +5,6 @@
       'task-uncompleted': isUncompleted
     }"
     class="cursor-pointer"
-    @mouseenter="showDescription = true"
-    @mouseleave="showDescription = false"
     @click="onClick"
   >
     <div class="list-item-main">
@@ -19,9 +17,9 @@
       </div>
     </div>
 
-    <transition name="slide-down">
+    <!-- <transition name="slide-down">
       <div class="text-small text-left p-1" v-if="showDescription">{{ description }}</div>
-    </transition>
+    </transition> -->
   </li>
 </template>
 
@@ -50,17 +48,6 @@
       dateToDisplay () {
         return formatDate(this.taskdate)
       },
-      // classObject () {
-      //   return {
-      //     'task-done': status === 'done',
-      //     'task-started': status === 'started'
-      //   }
-      // },
-      // classArray () {
-      //   if (this.status === 'done') return ['task-done']
-      //   if (this.status === 'started') return ['task-started']
-      //   return []
-      // }
       priorityToDisplay () {
         if (this. priority === 'high') return '!!!'
         return this.priority === 'standard' ? '!' : ''
