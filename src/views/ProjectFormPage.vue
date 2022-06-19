@@ -1,92 +1,91 @@
 <template>
-
   <h1>{{ title }}</h1>
 
-  <form @submit="onSubmit">
-    <t-control
-      v-for="klic in controlsKeys"
-      :key="klic"
-      :label="controls[klic].label"
-      :control="klic"
-      :type="controls[klic].type"
-      :value="project[klic]"
-      @has-input="onHasInput"
-      :resizable="controls[klic].resizable"
-    />
-    <t-button label="submit" />
-  </form>
-
+  <t-loading v-if="loading" />
+  <t-form
+    v-else
+    :controls="controls"
+    @submited="onSubmited"
+  />
 </template>
 
 <script>
-
 import db from '../utils/db.js'
-import TButton from '../components/TButton.vue'
-import TControl from '../components/TControl.vue'
+import TForm from '../components/TForm.vue'
+import TLoading from '../components/TLoading.vue'
 
 export default {
   name: 'ProjectFormPage',
   data () {
     return {
-      project: {
-        project: '',
-        description: '',
-        start: '',
-        ends: ''
-      },
       controls: {
         project: {
+          innitialValue: '',
           type: 'text',
-          label: 'project name'
+          label: 'project name',
+          validationRules: [
+            { rule: 'required', message: 'please enter the project name'},
+            { rule: 'minLength', par: 2, message: 'the minimum length is 2 characters' },
+            { rule: 'maxLength', par: 30, message: 'the maximum length is 30 characters' },
+          ]
         },
         description: {
+          innitialValue: '',
           type: 'textarea',
           label: 'description',
-          resizable: true
+          resizable: true,
+          validationRules: []
         },
         start: {
+          innitialValue: '',
           type: 'date',
-          label: 'start date'
+          label: 'start date',
+          validationRules: [
+            { rule: 'required', message: 'please enter the start date of the project' },
+          ]
         },
         ends: {
+          innitialValue: '',
           type: 'date',
-          label: 'finish date'
+          label: 'finish date',
+          validationRules: [
+            { rule: 'required', message: 'please enter the end date of the project' },
+          ]
         }
-      }
+      },
+      loading: true
     }
   },
   created () {
-    if (this.$route.params.id) {
-      db.get('projects/' + this.$route.params.id).then(record => {
-        this.project = record
-      })
+    if (!this.$route.params.id) {
+      this.loading = false
+      return
     }
+    db.get('projects/' + this.$route.params.id).then(record => {
+      Object.keys(this.controls).forEach(key => {
+        this.controls[key].innitialValue = record[key]
+      })
+      this.loading = false
+    })
   },
   computed: {
     title () {
       return this.$route.params.id ? 'edit project' : 'add project'
-    },
-    controlsKeys () {
-      return Object.keys(this.controls)
     }
   },
   methods: {
-    onSubmit (e) {
-      e.preventDefault()
+    onSubmited(data) {
       if (!this.$route.params.id) {
-        return db.post('projects', this.project).then(() => {
+        return db.post('projects', data).then(() => {
           this.$router.push('/projects')
         })
       }
-      return db.put('projects', this.project).then(() => {
+      return db.put('projects', Object.assign(data, { id: this.$route.params.id })).then(() => {
         this.$router.push('/projects/' + this.$route.params.id)
       })
-    },
-    onHasInput (payload) { // { control: 'název kontrolky', value: 'hodnota'}
-      this.project[payload.control] = payload.value
     }
   },
-  components: { TButton, TControl }
+  components: { TForm, TLoading }
 }
 
 </script>

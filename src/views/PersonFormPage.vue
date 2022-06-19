@@ -1,108 +1,105 @@
 <template>
   <h1>{{ title }}</h1>
 
-  <form @submit="onSubmit">
+  <t-loading v-if="loading" />
+  <t-form
+    v-else
+    :controls="controls"
+    @submited="onSubmited"
+  />
 
-    <t-control
-      v-for="klic in controlsKeys"
-      :key="klic"
-      :control="klic"
-      :label="controls[klic].label"
-      :value="person[klic]"
-      :type="controls[klic].type"
-      @has-input="onHasInput"
-    />
-
-    <t-button label="submit" />
-  </form>
 </template>
 
 <script>
   import db from '../utils/db.js'
-  import TButton from '../components/TButton.vue'
-  import TControl from '../components/TControl.vue'
+  import TForm from '../components/TForm.vue'
+  import TLoading from '../components/TLoading.vue'
 
 
   export default {
     name: 'PersonFormPage',
     data () {
       return {
-        person: {
-          first: '',
-          last: '',
-          position: '',
-          skills: '',
-          email: '',
-          phone: ''
-        },
         controls: {
           first: {
+            innitialValue: '',
             type: 'text',
-            label: 'first name'
+            label: 'first name',
+            validationRules: [
+              { rule: 'required', message: 'please enter the first name' },
+              { rule: 'minLength', par: 2, message: 'the minimum length is 2 characters' },
+              { rule: 'maxLength', par: 30, message: 'the maximum length is 30 characters' }
+            ]
           },
           last: {
+            innitialValue: '',
             type: 'text',
-            label: 'last name'
+            label: 'last name',
+            validationRules: [
+              { rule: 'required', message: 'please enter the first name' },
+              { rule: 'minLength', par: 2, message: 'the minimum length is 2 characters' },
+              { rule: 'maxLength', par: 100, message: 'the maximum length is 30 characters' }
+            ]
           },
           email: {
+            innitialValue: '',
             type: 'email',
-            label: 'email'
+            label: 'email',
+            validationRules: [
+              { rule: 'required', message: 'please enter the first name' },
+            ]
           },
           phone: {
+            innitialValue: '',
             type: 'tel',
-            label: 'phone'
+            label: 'phone',
+            validationRules: []
           },
           position: {
+            innitialValue: '',
             type: 'text',
             label: 'position',
+            validationRules: []
           },
           skills: {
+            innitialValue: '',
             type: 'text',
-            label: 'skills'
+            label: 'skills',
+            validationRules: []
           },
-        }
+        },
+        loading: true
       }
     },
     created () {
-      if (this.$route.params.id) {
-        db.get('persons/' + this.$route.params.id).then(record => {
-          this.person = record
-        })
+      if (!this.$route.params.id) {
+        this.loading = false
+        return
       }
+      db.get('persons/' + this.$route.params.id).then(record => {
+        Object.keys(this.controls).forEach(key => {
+          this.controls[key].innitialValue = record[key]
+        })
+        this.loading = false
+      })
     },
     computed: {
       title () {
         return this.$route.params.id ? 'edit person' : 'add person'
       },
-      controlsKeys () {
-        return Object.keys(this.controls) // ['first', 'last', 'email' ...]
-      }
     },
-    /*
-      voláme databázi a píšeme název db tabulky
-        - je jedno jestli píšu první lomítko (db si ho doplní kdyžtak sama)
-      jsme v routeru a píšeme cestu (path)
-        - ta musí začínat prvním lomítkem
-      jsme v routeru a chceme za cestu ještě přidat parametr
-        - musíme psát první lomítko - viz výše
-        - musíme psát lomítko za path a za něj teprv parametr
-    */
     methods: {
-      onSubmit (e) {
-        e.preventDefault()
+      onSubmited (data) {
         if (!this.$route.params.id) {
-          return db.post('persons', this.person).then(() => {
+          return db.post('persons', data).then(() => {
             this.$router.push('/persons')
           })
         }
-        return db.put('persons', this.person).then(() => {
+        return db.put('persons', Object.assign(data, { id: this.$route.params.id })).then(() => {
           this.$router.push('/persons/' + this.$route.params.id)
         })
-      },
-      onHasInput (payload) {
-        this.person[payload.control] = payload.value
-      },
+      }
     },
-    components: { TButton, TControl }
+    components: { TForm, TLoading }
   }
 </script>

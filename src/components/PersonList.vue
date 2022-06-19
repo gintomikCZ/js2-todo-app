@@ -18,6 +18,7 @@ export default {
       required: true
     }
   },
+  emits: ['delete-person-task'],
   computed: {
     personsSorted () {
       return this.persons.slice().sort((a, b) => {

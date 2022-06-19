@@ -4,6 +4,15 @@
   <t-loading v-if="loading" />
 
   <template v-else>
+    <t-modal :show="showDeleteModal" @close-me="showDeleteModal = false">
+      <p>
+        <span>Do you really want to delete project </span>
+        <span class="text-bold">{{ project.project }}</span>
+        <span> ?</span>
+      </p>
+      <t-button label="no, cancel" class="mr-1" @clicked="showDeleteModal = false"/>
+      <t-button label="yes, delete" @clicked="deleteProject"/>
+    </t-modal>
 
     <t-button label="edit" @clicked="onEditClicked" class="mr-1" />
     <t-button label="add task" @clicked="onAddTaskClicked" :class="{ 'mr-1': !tasks.length }" />
@@ -41,6 +50,7 @@ import { formatDate } from '../utils/dateUtils.js'
 import TLoading from '../components/TLoading.vue'
 import TButton from '../components/TButton.vue'
 import TaskList from '../components/TaskList.vue'
+import TModal from '../components/TModal.vue'
 
 export default {
 
@@ -50,7 +60,8 @@ export default {
     return {
       project: {},
       tasks: [],
-      loading: true
+      loading: true,
+      showDeleteModal: false
     }
   },
   created () {
@@ -82,13 +93,17 @@ export default {
       this.$router.push('/taskform/' + this.$route.params.id)
     },
     onDeleteProjectClicked () {
+      this.showDeleteModal = true
+    },
+    deleteProject () {
       return db.delete('projects', { id: this.$route.params.id }).then(() => {
         this.$router.push('/projects')
       })
     }
   },
-  components: { TLoading, TButton, TaskList }
+  components: { TLoading, TButton, TaskList, TModal }
 }
+
 
 </script>
 

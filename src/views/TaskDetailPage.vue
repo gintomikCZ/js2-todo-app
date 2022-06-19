@@ -3,12 +3,24 @@
 
   <t-loading v-if="loading" />
   <template v-else>
-    <t-modal :show="showAddPersonModal">
+
+    <t-modal :show="showDeleteModal" @close-me="showDeleteModal = false">
+      <p>
+        <span>Do you really want to delete task </span>
+        <span class="text-bold">{{ task.task}}</span>
+        <span> ?</span>
+      </p>
+      <t-button label="no, cancel" @clicked="showDeleteModal = false" class="mr-1" />
+      <t-button label="yes, delete" @clicked="deleteTask" />
+    </t-modal>
+
+
+    <t-modal :show="showAddPersonModal" @close-me="showAddPersonModal = false">
       <h4>select person</h4>
       <ul class="add-person-list">
         <li v-for="person in allPersonsFiltered" :key="person.id" @click="onAddPersonItemClick(person.id)">{{
-        person.last + ' '
-        + person.first }}
+          person.last + ' '
+          + person.first }}
         </li>
       </ul>
       <t-button label="cancel" @clicked="showAddPersonModal = false" class="mt-1" />
@@ -19,7 +31,7 @@
       :class="{'mr-1': !persons.length}" />
     <t-button v-else-if="task.status === 'done'" label="mark as started" @clicked="changeStatus('started')"
       :class="{'mr-1': !persons.length}" />
-    <t-button v-if="!persons.length" label="delete task" @clicked="onDeleteClicked" />
+    <t-button v-if="!persons.length" label="delete task" @clicked="showDeleteModal = true" />
 
     <ul class="detail-list">
       <li>
@@ -65,50 +77,6 @@
   import PersonList from '../components/PersonList.vue'
   import TModal from '../components/TModal.vue'
 
-  /* osoby přiřazené k úkolu ... persons: [
-      { id: 15, personid: 2 (Alča), taskid: 12 ...},
-      { id: 16, personid: 5 (Aleš), taskid: 12 ...}
-  ]
-  /*/
-
-  /*
-      personsIds     [2, 5]
-  */
-
-  /*
-    všechny osoby ... allPersons: [
-      { id: 2 (Alča) ....}
-      { id: 5 (Aleš) ....}
-      { id: 7 (Karel) ...}
-    ]
-  */
-
- /*
-  allPersonsFiltered:
-    takové objekty, jejichž vlastnost 'id' se nenachází v proměnné (poli) personsIds
- */
-
-
-/*
-  const ar = [5, 9, 15, 'ahoj']
-  console.log(ar.indexOf(15)) // 2
-  console.log(ar.indexOf('ahoj')) // 3
-  console.log(ar.indexOf(10)) // -1
-
-  poleVeKteremHledame.indexOf(prvekKteryHledame) //index prvku v poli nebo -1
-
-  ověřit jestli je prvek v poli:
-  pole.indexOf(prvek) > -1 //true pokud prvek v poli je, false pokud není
-
-ověřit, že prvek není v poli
-  pole.indexOf(prvek) < 0 // true pokud prvek v poli není , false pokud tam je
-
-
-'ahoj'.indexOf['a'] // 0
-*/
-
-
-
   export default {
     name: 'TaskDetailPage',
     data () {
@@ -117,7 +85,8 @@ ověřit, že prvek není v poli
         task: {},
         persons: [], // taháno z tabulky personstasks { id: 99, personid: 2, taskid: 12 ..........}
         showAddPersonModal: false,
-        allPersons: [] // taháno z tabulky persons { id: 2, first: 'Alča', last: 'Nováková' .....}
+        allPersons: [], // taháno z tabulky persons { id: 2, first: 'Alča', last: 'Nováková' .....}
+        showDeleteModal: false
       }
     },
     created () {
@@ -158,7 +127,7 @@ ověřit, že prvek není v poli
           this.$router.push('/projects/' + this.task.projectid)
         })
       },
-      onDeleteClicked () {
+      deleteTask () {
         return db.delete('tasks', { id: this.$route.params.id }).then(() => {
           this.$router.push('/projects/' + this.task.projectid)
         })

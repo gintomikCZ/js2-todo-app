@@ -5,6 +5,16 @@
 
   <template v-else>
 
+    <t-modal :show="showDeleteModal" @close-me="showDeleteModal = false">
+      <p>
+        <span>Do you really want to delete person </span>
+        <span class ="text-bold">{{ person.last + ' ' + person.first }}</span>
+        <span> ?</span>
+      </p>
+      <t-button label="no, cancel" @clicked="showDeleteModal = false" class="mr-1"/>
+      <t-button label="yes, delete" @clicked="deletePerson" />
+    </t-modal>
+
     <t-button
       label="edit"
       @clicked="onClicked"
@@ -13,7 +23,7 @@
     <t-button
       v-if="!tasks.length"
       label="delete person"
-      @clicked="onDeleteClicked"
+      @clicked="showDeleteModal = true"
     />
 
     <ul class="detail-list">
@@ -56,6 +66,7 @@ import db from '../utils/db.js'
 import TLoading from '../components/TLoading.vue'
 import TButton from '../components/TButton.vue'
 import TaskList from '../components/TaskList.vue'
+import TModal from '../components/TModal.vue'
 
 export default {
 name: 'PersonDetailPage',
@@ -63,7 +74,8 @@ data () {
   return {
     person: {},
     loading: true,
-    tasks: []
+    tasks: [],
+    showDeleteModal: false
   }
 },
 created () {
@@ -95,13 +107,13 @@ methods: {
   onClicked () {
     this.$router.push('/personform/' + this.$route.params.id)
   },
-  onDeleteClicked () {
+  deletePerson () {
     return db.delete('persons', { id: this.$route.params.id }).then(() => {
       this.$router.push('/persons')
     })
   }
 },
-  components: { TLoading, TButton, TaskList }
+  components: { TLoading, TButton, TaskList, TModal }
 }
 
 </script>
