@@ -1,4 +1,6 @@
 import axios from 'axios'
+import router from '../router/index.js'
+import store from '../store/index.js'
 
 axios.defaults.baseURL = 'https://sdaapi.glabazna.eu'
 axios.defaults.headers.common['Content-Type'] = 'application/json'
@@ -21,7 +23,10 @@ export default {
     }).then((response) => {
       return response.data.data
     }).catch((error) => {
-      console.error(error)
+      console.log(error)
+      store.commit('setErrorTitle', 'Error - GET method failed')
+      store.commit('setErrorMessage', 'GET Error - nepodařilo se načíst data z databáze :-(')
+      router.push('/error/1')
     })
   },
 
@@ -48,6 +53,9 @@ export default {
       return response.data.data
     }).catch((error) => {
       console.error(error)
+      store.commit('setErrorTitle', 'Error - POST method failed')
+      store.commit('setErrorMessage', 'POST Error - nepodařilo se uložit data do databáze :-(')
+      router.push('/error/1')
     })
   },
   // chceme uložit nový záznam do tabulky 'projects'
@@ -73,6 +81,9 @@ export default {
       return response.data.data
     }).catch((error) => {
       console.error(error)
+      store.commit('setErrorTitle', 'Error - PUT method failed')
+      store.commit('setErrorMessage', 'PUT Error - nepodařilo se editovat záznam :-(')
+      router.push('/error/1')
     })
   },
   // chceme editovat záznam z tabulky 'projects' s id 5
@@ -98,6 +109,9 @@ export default {
       return response.data.data
     }).catch((error) => {
       console.error(error)
+      store.commit('setErrorTitle', 'Error - DELETE method failed')
+      store.commit('setErrorMessage', 'DELETE Error - nepodařilo se vymazat data z databáze :-(')
+      router.push('/error/1')
     })
   }
 

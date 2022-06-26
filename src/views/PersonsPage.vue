@@ -20,7 +20,7 @@
 
 <script>
 
-import db from '../utils/db.js'
+// import db from '../utils/db.js'
 import TList from '../components/TList.vue'
 import TLoading from '../components/TLoading.vue'
 import TButton from '../components/TButton.vue'
@@ -29,12 +29,13 @@ export default {
   name: 'PersonsPage',
   data () {
     return {
-      persons: [],
+//      persons: [],
       loading: true
     }
   },
   computed: {
     personsToDisplay () {
+      if (!this.persons) return []
       return this.persons.map((person) => {
         let description = person.position ? person.position : ''
         description += person.position && person.skills ? ', ' : ''
@@ -47,11 +48,17 @@ export default {
           rightBottom: person.phone || ''
         }
       }).sort((a, b) => { return a.title.localeCompare(b.title) })
+    },
+    persons () {
+      return this.$store.state.persons
     }
   },
   created () {
-    db.get('persons').then(data => {
-      this.persons = data
+    // db.get('persons').then(data => {
+    //   this.persons = data
+    //   this.loading = false
+    // })
+    this.$store.dispatch('fetchPersons').then(() => {
       this.loading = false
     })
   },

@@ -1,4 +1,5 @@
 <template>
+
   <h1>{{ title }}</h1>
 
   <t-loading v-if="loading" />
@@ -69,6 +70,7 @@
             label: 'date to complete',
             validationRules: [
               { rule: 'required', message: 'please enter the project name' },
+              { rule: 'dateStringIsBetween', par: {}, message: 'the date is out of the range'}
             ]
           }
         }
@@ -78,6 +80,7 @@
       if (this.$route.params.projectid) {
         db.get('projects/' + this.$route.params.projectid).then(record => {
           this.project = record
+          this.controls.taskdate.validationRules[1].par = { from: record.start, to: record.ends }
           this.loading = false
         })
       } else {
@@ -92,6 +95,7 @@
           .then(() => {
             db.get('projects/' + this.projectid).then(projectRecord => {
               this.project = projectRecord
+              this.controls.taskdate.validationRules[1].par = { from: projectRecord.start, to: projectRecord.ends }
               this.loading = false
             })
         })

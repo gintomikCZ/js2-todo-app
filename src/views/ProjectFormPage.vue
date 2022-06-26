@@ -2,17 +2,23 @@
   <h1>{{ title }}</h1>
 
   <t-loading v-if="loading" />
-  <t-form
-    v-else
-    :controls="controls"
-    @submited="onSubmited"
-  />
+  <t-form v-else :controls="controls" @submited="onSubmited" />
+
+  <t-modal :show="showModalError" @close-me="showModalError = false">
+    <p>
+      The start date can not be younger then the end date!
+    </p>
+    <t-button label="OK" @clicked="showModalError = false" />
+  </t-modal>
 </template>
 
 <script>
 import db from '../utils/db.js'
 import TForm from '../components/TForm.vue'
 import TLoading from '../components/TLoading.vue'
+import TModal from '../components/TModal.vue'
+import TButton from '../components/TButton.vue'
+import { isOlderOrEqualDateString as compareDate } from '../utils/dateUtils.js'
 
 export default {
   name: 'ProjectFormPage',
@@ -53,7 +59,8 @@ export default {
           ]
         }
       },
-      loading: true
+      loading: true,
+      showModalError: false
     }
   },
   created () {
@@ -75,6 +82,10 @@ export default {
   },
   methods: {
     onSubmited(data) {
+      if (!compareDate(data.start, data.ends)) {
+        this.showModalError = true
+        return
+      }
       if (!this.$route.params.id) {
         return db.post('projects', data).then(() => {
           this.$router.push('/projects')
@@ -85,7 +96,7 @@ export default {
       })
     }
   },
-  components: { TForm, TLoading }
+  components: { TForm, TLoading, TModal, TButton }
 }
 
 </script>

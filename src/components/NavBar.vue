@@ -16,6 +16,9 @@
         <div v-if="$route.path === '/persons'">persons</div>
         <router-link v-else to="/persons">persons</router-link>
       </li>
+      <!-- <li>
+        <button @click="onErrorButtonClick">throw</button>
+      </li> -->
     </ul>
   </nav>
 </template>
@@ -25,7 +28,12 @@ export default {
   name: 'NavBar',
   created () {
     // console.log(this.$route)
-  }
+  },
+  // methods: {
+  //   onErrorButtonClick () {
+  //     throw new Error ('lala')
+  //   }
+  // }
 }
 </script>
 

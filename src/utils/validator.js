@@ -10,6 +10,10 @@ export default {
 
   maxLength (v, par) {
     return typeof v === 'string' && v.length <= par
+  },
+
+  dateStringIsBetween (v, par) {
+    return v >= par.from && v <= par.to
   }
 }
 

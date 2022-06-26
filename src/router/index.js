@@ -9,7 +9,7 @@ import ProjectFormPage from '../views/ProjectFormPage.vue'
 import PersonFormPage from '../views/PersonFormPage.vue'
 import TaskFormPage from '../views/TaskFormPage.vue'
 import TaskDetailPage from '../views/TaskDetailPage.vue'
-
+import ErrorPage from '../views/ErrorPage.vue'
 
 const routes = [
 
@@ -18,18 +18,17 @@ const routes = [
   { path: '/persons', name: 'persons', component: PersonsPage },
   { path: '/projects/:id', name: 'projectDetail', component: ProjectDetailPage },
   { path: '/persons/:id', name: 'personDetail', component: PersonDetailPage },
-
   { path: '/projectform/:id', name: 'projectFormEdit', component: ProjectFormPage },
   { path: '/projectform', name: 'projectFormAdd', component: ProjectFormPage },
-
   { path: '/personform/:id', name: 'personFormEdit', component: PersonFormPage },
   { path: '/personform', name: 'personFormAdd', component: PersonFormPage },
-
   { path: '/taskform/:projectid', name: 'taskFormAdd', component: TaskFormPage },
-
   { path: '/taskformedit/:id', name: 'taskFormEdit', component: TaskFormPage },
+  { path: '/taskdetail/:id', name: 'taskDetail', component: TaskDetailPage },
+  { path: '/error/:par', name: 'generalError', component: ErrorPage },
+  { path: '/:pathMatch(.*)*', name: 'error', component: ErrorPage },
 
-  { path: '/taskdetail/:id', name: 'taskDetail', component: TaskDetailPage }
+
 
   // {
   //   path: '/',

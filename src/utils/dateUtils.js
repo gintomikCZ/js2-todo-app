@@ -11,3 +11,17 @@ export const formatDate = function (dbDateString) {
     .reverse().join('.') // '9.1.2022'
 }
 
+// dt, dtToCompare - instance of Date
+
+export const isOlder = function (dt, dtToCompare) {
+  return dt.getTime() < dtToCompare.getTime()
+}
+
+export const isOlderDateString = function (dtString, dtStringToCompare) {
+  return dtString < dtStringToCompare
+}
+
+export const isOlderOrEqualDateString = function (dtString, dtStringToCompare) {
+  return dtString <= dtStringToCompare
+}
+
